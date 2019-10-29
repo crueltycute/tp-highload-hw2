@@ -41,21 +41,21 @@ router.get('/api/data', function(req, res, next) {
     if (serverResponseOK) {
         setTimeout(() => {
             const data = {
-                string: 'Request paused for 2 seconds',
+                string: 'Request paused for 2 milliseconds',
                 status: OK
             };
             metricsRequest.inc(serverResponseOK ? {'req200': '/api/data'} : {'req500': '/api/data'}, 1);
             res.send(JSON.stringify(data));
-        }, 2000);
+        }, 200);
     } else {
         setTimeout(() => {
             const data = {
-                string: 'Request paused for 10 seconds',
+                string: 'Request paused for 2 milliseconds',
                 status: NOT_OK
             };
             metricsRequest.inc(serverResponseOK ? {'req200': '/api/notok'} : {'req500': '/api/notok'}, 1);
             res.send(JSON.stringify(data));
-        }, 10000);
+        }, 200);
     }
 });
 
