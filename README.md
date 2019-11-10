@@ -27,4 +27,6 @@
 
 `/api/status` - проверка, включен ли бэкенд (текущий статус ответа)
 
-`/api/data` - запрос с задержкой в 200 мс, возвращает { 'Response delay is ${response delay} ms', ${response status code} } 
+`/api/data` - запрос с задержкой в 200 мс, возвращает { 'Response delay is ${response delay} ms', ${response status code} }
+
+`:8080/metrics` - собранные прометеусом метрики 
