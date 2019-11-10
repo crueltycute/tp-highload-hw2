@@ -2,62 +2,55 @@ const express = require('express');
 const client = require('prom-client');
 const apiMetrics = require('prometheus-api-metrics');
 
-const router = express();
-const routerMetrics = express();
+// To make our backend slow enough
+const RESPONSE_DELAY = 200;  // ms
 
+// Used response statuses
 const OK = 200;
 const NOT_OK = 500;
 
-let serverResponseOK = true;
+const router = express();
+const routerMetrics = express();
 
-const metricsRequest = new client.Counter({
-    name: 'request',
-    help: 'kek',
-    labelNames: ['req200', 'req500'],
+// True - response with 200, false - response with 500
+let serverResponseStatus = true;
+
+// Counter for requests on /api/data
+const metricsRequestCounter = new client.Counter({
+    name: 'request_data_counter',
+    help: 'Count requests on /api/data.',
 });
 
 const registry = new client.Registry();
-registry.registerMetric(metricsRequest);
+registry.registerMetric(metricsRequestCounter);
 
 routerMetrics.use(apiMetrics());
 
-router.get('/api/ok', function(req, res, next) {
-    metricsRequest.inc(serverResponseOK ? {'req200': '/api/ok'} : {'req500': '/api/ok'}, 1);
-    res.sendStatus(serverResponseOK ? OK : NOT_OK);
-    serverResponseOK = true;
+// switch response status from 200 to 500 and vice versa
+router.get('/api/switch', function(req, res, next) {
+    serverResponseStatus = !serverResponseStatus;
+    res.sendStatus(serverResponseStatus ? OK : NOT_OK);
 });
 
-router.get('/api/notok', function(req, res, next) {
-    metricsRequest.inc(serverResponseOK ? {'req200': '/api/notok'} : {'req200': '/api/notok'}, 1);
-    res.sendStatus(serverResponseOK ? OK : NOT_OK);
-    serverResponseOK = false;
-});
-
+// current response status from serverResponseStatus
 router.get('/api/status', function(req, res, next) {
-    res.sendStatus(serverResponseOK ? OK : NOT_OK);
+    res.sendStatus(serverResponseStatus ? OK : NOT_OK);
 });
 
+// delayed request to imitate slowness
 router.get('/api/data', function(req, res, next) {
-    if (serverResponseOK) {
-        setTimeout(() => {
-            const data = {
-                string: 'Request paused for 2 milliseconds',
-                status: OK
-            };
-            metricsRequest.inc(serverResponseOK ? {'req200': '/api/data'} : {'req500': '/api/data'}, 1);
-            res.send(JSON.stringify(data));
-        }, 200);
-    } else {
-        setTimeout(() => {
-            const data = {
-                string: 'Request paused for 2 milliseconds',
-                status: NOT_OK
-            };
-            metricsRequest.inc(serverResponseOK ? {'req200': '/api/notok'} : {'req500': '/api/notok'}, 1);
-            res.send(JSON.stringify(data));
-        }, 200);
-    }
+    setTimeout(() => {
+        const data = {
+            string: 'Response delay is ' + RESPONSE_DELAY + ' ms',
+            status: serverResponseStatus ? OK : NOT_OK
+        };
+        metricsRequestCounter.inc(1);
+        res.send(JSON.stringify(data));
+    }, RESPONSE_DELAY);
 });
 
 router.listen(80);
+console.log("Backend started on 80 port");
+
 routerMetrics.listen(8080);
+console.log("Metrics started on 8080 port");
