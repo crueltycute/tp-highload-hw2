@@ -72,6 +72,7 @@
 
 ##### Prometheus
 `./run.sh` - запуск docker-compose, контейнер *monitoring-prometheus*
+`./run-exporter.sh` - запуск node-prometheus-exporter
 
 [Образец конфига prometheus](/configs/balancer/prometheus.yml)
 
