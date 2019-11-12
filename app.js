@@ -49,8 +49,8 @@ router.get('/api/data', function(req, res, next) {
     }, RESPONSE_DELAY);
 });
 
-router.listen(80);
-console.log("Backend started on 80 port");
+router.listen(8000);
+console.log("Backend started on 8000 port");
 
 routerMetrics.listen(8080);
 console.log("Metrics started on 8080 port");

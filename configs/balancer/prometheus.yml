@@ -1,0 +1,16 @@
+global:
+  scrape_interval:     10s
+  # evaluation_interval: 10s
+
+scrape_configs:
+  - job_name: 'Node_1'
+    static_configs:
+      - targets: ['142.93.52.228']
+
+  - job_name: 'Node_2'
+    static_configs:
+      - targets: ['167.71.181.19']
+
+  - job_name: 'Node_3'
+    static_configs:
+      - targets: [ '167.71.98.62']
