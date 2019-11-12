@@ -60,16 +60,18 @@
 
 ##### Nginx + Openresty
 
-Конфиг лежит в /usr/local/openresty/nginx/conf/nginx.conf
+Конфиг лежит в /usr/local/openresty/nginx/conf/nginx.conf (взяла [отсюда](https://github.com/openresty/lua-resty-upstream-healthcheck))
 
 `openresty -t` - валидация конфига
 
 `openresty` - старт Nginx с Openresty
 
+По урлу */check* доступен отчет о статусах серверов из апстрима бэкенда
+
 `sudo fuser -k 80/tcp` - убить процесс на 80 порту
 
 ##### Prometheus
-`./run.sh` - запуск docker-compose, контейнер monitoring-prometheus
+`./run.sh` - запуск docker-compose, контейнер *monitoring-prometheus*
 
 [Образец конфига prometheus](/configs/balancer/prometheus.yml)
 
