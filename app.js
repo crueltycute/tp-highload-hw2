@@ -44,7 +44,9 @@ router.get('/api/data', function(req, res, next) {
             string: 'Response delay is ' + RESPONSE_DELAY + ' ms',
             status: serverResponseStatus ? OK : NOT_OK
         };
-        metricsRequestCounter.inc(1);
+        if (serverResponseStatus) {
+            metricsRequestCounter.inc(1);
+        }
         res.send(JSON.stringify(data));
     }, RESPONSE_DELAY);
 });

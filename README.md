@@ -62,9 +62,6 @@
 
 Конфиг лежит в /usr/local/openresty/nginx/conf/nginx.conf (взяла [отсюда](https://github.com/openresty/lua-resty-upstream-healthcheck))
 
-`openresty -t` - валидация конфига
-
-`openresty` - старт Nginx с Openresty
 
 По урлу */check* доступен отчет о статусах серверов из апстрима бэкенда
 
@@ -83,3 +80,7 @@
 Слушает 3000 порт ([142.93.68.122:3000](http://142.93.68.122:3000)).
 
 `sudo service grafana-server restart` - рестарт
+
+-----------
+
+**Нагрузка:** `ab -n 100000 -c 100 -i http://142.93.68.122/api/data`
